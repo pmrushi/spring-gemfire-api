@@ -6,14 +6,20 @@ import org.apache.geode.cache.query.Query;
 import org.apache.geode.cache.query.QueryService;
 import org.apache.geode.cache.query.SelectResults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MyController {
 
     @Autowired
     private GemFireCache cache;
+
+    @PostMapping("sample")
+    @Cacheable("customer")
+    public Customer post(@RequestBody Customer customer) {
+        return customer;
+    }
 
     @GetMapping("/all")
     public SelectResults<Customer> test() throws Exception {
