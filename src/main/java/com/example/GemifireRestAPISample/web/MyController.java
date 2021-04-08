@@ -34,7 +34,6 @@ public class MyController {
         Query query = queryService.newQuery("SELECT * FROM /customer");
         SelectResults<Customer> customers = (SelectResults)query.execute();
         System.out.println(customers);
-        model.addAttribute("customers", customers);
         return customers;
     }
 }
