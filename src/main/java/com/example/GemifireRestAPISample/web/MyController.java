@@ -7,6 +7,7 @@ import org.apache.geode.cache.query.QueryService;
 import org.apache.geode.cache.query.SelectResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,18 +16,25 @@ public class MyController {
     @Autowired
     private GemFireCache cache;
 
-    @PostMapping("sample")
+    @PostMapping("customer")
     @Cacheable("customer")
     public Customer post(@RequestBody Customer customer) {
         return customer;
     }
 
+    @GetMapping("/list")
+    public Model list(Model model) throws Exception {
+        model.addAttribute("customers", getAll(model));
+        return model;
+    }
+
     @GetMapping("/all")
-    public SelectResults<Customer> test() throws Exception {
+    public SelectResults<Customer> getAll(Model model) throws Exception {
         QueryService queryService = cache.getQueryService();
         Query query = queryService.newQuery("SELECT * FROM /customer");
-        SelectResults<Customer> results = (SelectResults)query.execute();
-        System.out.println(results);
-        return results;
+        SelectResults<Customer> customers = (SelectResults)query.execute();
+        System.out.println(customers);
+        model.addAttribute("customers", customers);
+        return customers;
     }
 }
