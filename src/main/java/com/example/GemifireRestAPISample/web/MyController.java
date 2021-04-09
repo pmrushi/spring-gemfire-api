@@ -22,6 +22,16 @@ public class MyController {
         return customer;
     }
 
+    @GetMapping("hello/{id}")
+    @Cacheable("customer")
+    public Customer hello(@PathVariable String id) {
+        Customer customer = new Customer();
+        customer.setFirstname("fname");
+        customer.setLastname("lname");
+        customer.setAge(10);
+        return customer;
+    }
+
     @GetMapping("/list")
     public Model list(Model model) throws Exception {
         model.addAttribute("customers", getAll(model));
