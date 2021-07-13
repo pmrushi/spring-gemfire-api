@@ -1,52 +1,72 @@
 package com.example.GemifireRestAPISample.web;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
+import com.example.GemifireRestAPISample.model.Customer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.apache.geode.cache.GemFireCache;
+import org.apache.geode.cache.query.Query;
+import org.apache.geode.cache.query.QueryService;
+import org.apache.geode.cache.query.SelectResults;
+import org.apache.geode.cache.query.internal.LinkedResultSet;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class MyControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private GemFireCache cache;
+
+    @Mock
+    private QueryService queryService;
+
+    @Mock
+    private Query query;
+
+    @InjectMocks
+    private MyController myController = new MyController(new SimpleMeterRegistry());
 
     @Test
-    public void shouldTestListAPI() throws Exception {
-        this.mockMvc.perform(get("/list"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("<title>Gemfire Customers</title>")));
+    public void getSample() {
+        String sample = myController.getSample();
+        assertTrue(sample.startsWith("hello-"));
     }
 
     @Test
-    public void shouldTestALL() throws Exception {
-        this.mockMvc.perform(get("/all"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[]")));
+    public void getMessage() {
+        Customer customer = myController.getMessage("id");
+        assertEquals("Welcome to Gemfire", customer.getMessage());
+        assertEquals("id", customer.getId());
     }
 
     @Test
-    public void shouldTestHelloId() throws Exception {
-        ResultActions perform = this.mockMvc.perform(get("/hello/1"));
-        perform.andExpect(status().isOk());
-        MockHttpServletResponse response = perform.andReturn().getResponse();
-        JSONObject json = new JSONObject(response.getContentAsString());
-        Assertions.assertEquals("fname", json.get("firstname"));
-        Assertions.assertEquals("lname", json.get("lastname"));
-        Assertions.assertEquals(10, json.get("age"));
+    public void list() throws Exception {
+        ExtendedModelMap extendedModelMap = new ExtendedModelMap();
+        when(cache.getQueryService()).thenReturn(queryService);
+        when(queryService.newQuery("SELECT * FROM /customer")).thenReturn(query);
+        LinkedResultSet linkedResultSet = new LinkedResultSet();
+        when(query.execute()).thenReturn(linkedResultSet);
+        Model model = myController.list(extendedModelMap);
+        SelectResults<Customer> customers = (SelectResults<Customer>) model.getAttribute("customers");
+        assertEquals(0, customers.size());
+    }
+
+    @Test
+    public void getAll() throws Exception {
+        ExtendedModelMap model = new ExtendedModelMap();
+        when(cache.getQueryService()).thenReturn(queryService);
+        when(queryService.newQuery("SELECT * FROM /customer")).thenReturn(query);
+        LinkedResultSet linkedResultSet = new LinkedResultSet();
+        when(query.execute()).thenReturn(linkedResultSet);
+        SelectResults<Customer> customers = myController.getAll(model);
+        assertEquals(0, customers.size());
     }
 }

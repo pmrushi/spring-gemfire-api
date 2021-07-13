@@ -1,53 +1,42 @@
 package com.example.GemifireRestAPISample.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.gemfire.mapping.annotation.Region;
+import java.util.Date;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-@Region("customer")
 public class Customer {
 
-    private static AtomicLong COUNTER = new AtomicLong(0L);
+    private Date date;
+    private String message;
+    private String id;
 
-    @Id
-    private Long id;
-    private String firstname;
-    private String lastname;
-    private int age;
-
-    @PersistenceConstructor
     public Customer() {
-        this.id = COUNTER.incrementAndGet();
+    }
+    public Customer(Date date, String message, String id) {
+        this.date = date;
+        this.message = message;
+        this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public Date getDate() {
+        return date;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-
-    public String getLastname() {
-        return lastname;
+    public String getMessage() {
+        return message;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String toString() {
-        return "firstname: " + firstname + " ,lastname: " + lastname + " ,age: " + age;
+    public String getId() {
+        return id;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+    public void setId(String id) {
+        this.id = id;
     }
 }

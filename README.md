@@ -2,7 +2,7 @@ Author : pmrushi@gmail.com
 
 # spring-gemfire-api
 
-POST - http://localhost:8080/customer
+POST - http://localhost:8080/customerObj
 
 Save Customers data
 
@@ -18,7 +18,7 @@ Body
 
 GET - http://localhost:8080/all 
 
-Return all customers in json
+Return all customerObjs in json
 
 ```
 [
@@ -32,4 +32,4 @@ Return all customers in json
 
 GET - http://localhost:8080/list
 
-Shows all customer in table.
+Shows all customerObj in table.

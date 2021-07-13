@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<div th:switch="${customers}">
+<div th:switch="${customerObjs}">
     <div th:case="*">
         <h2>All Customers</h2>
         <table border="1" cellpadding="2">
@@ -18,10 +18,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="customer : ${customers}">
-                <td th:text="${customer.firstname}"></td>
-                <td th:text="${customer.lastname}"></td>
-                <td th:text="${customer.age}"></td>
+            <tr th:each="customerObj : ${customerObjs}">
+                <td th:text="${customerObj.firstname}"></td>
+                <td th:text="${customerObj.lastname}"></td>
+                <td th:text="${customerObj.age}"></td>
             </tr>
             </tbody>
         </table>

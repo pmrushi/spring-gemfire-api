@@ -1,6 +1,6 @@
 package com.example.GemifireRestAPISample;
 
-import com.example.GemifireRestAPISample.model.Customer;
+import com.example.GemifireRestAPISample.model.CustomerObj;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.gemfire.config.annotation.EnableCachingDefinedRegions;
@@ -10,7 +10,7 @@ import org.springframework.data.gemfire.repository.config.EnableGemfireRepositor
 @EnableGemfireRepositories
 @SpringBootApplication
 @EnableCachingDefinedRegions
-@EnableEntityDefinedRegions(basePackageClasses = Customer.class)
+@EnableEntityDefinedRegions(basePackageClasses = CustomerObj.class)
 public class GemifireRestApiSampleApplication {
 
 	public static void main(String[] args) {
