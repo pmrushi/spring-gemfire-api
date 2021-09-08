@@ -1,6 +1,6 @@
-package com.example.GemifireRestAPISample;
+package com.example.genfire;
 
-import com.example.GemifireRestAPISample.model.CustomerObj;
+import com.example.genfire.model.CustomerObj;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.gemfire.config.annotation.EnableCachingDefinedRegions;

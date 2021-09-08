@@ -1,11 +1,11 @@
-package com.example.GemifireRestAPISample.web;
+package com.example.genfire.web;
 
-import com.example.GemifireRestAPISample.model.Customer;
+import com.example.genfire.model.Customer;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.geode.cache.GemFireCache;
-import org.apache.geode.cache.query.Query;
-import org.apache.geode.cache.query.QueryService;
-import org.apache.geode.cache.query.SelectResults;
+import org.apache.geode.cache.query.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MyController {
 
+    Logger logger = LoggerFactory.getLogger(MyController.class);
+
     private Random random;
     private MeterRegistry meterRegistry;
     @Autowired
@@ -29,16 +32,17 @@ public class MyController {
 
     public MyController(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
-        this.random = new Random();
+        this.random = new SecureRandom();
     }
 
     @GetMapping("hello/{id}")
     public String getSample() {
-        int wait = random.nextInt(100);
+        var wait = random.nextInt(100);
         try {
             Thread.sleep(wait);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            logger.error("Error", e);
         }
         meterRegistry.timer("sample").record(wait, TimeUnit.MILLISECONDS);
         return "hello-" + wait;
@@ -52,17 +56,21 @@ public class MyController {
     }
 
     @GetMapping("/list")
-    public Model list(Model model) throws Exception {
-        model.addAttribute("customers", getAll(model));
+    public Model list(Model model) {
+        model.addAttribute("customers", getAll());
         return model;
     }
 
     @GetMapping("/all")
-    public SelectResults<Customer> getAll(Model model) throws Exception {
-        QueryService queryService = cache.getQueryService();
-        Query query = queryService.newQuery("SELECT * FROM /customer");
-        SelectResults<Customer> customers = (SelectResults) query.execute();
-        System.out.println(customers);
+    public SelectResults<Customer> getAll() {
+        var queryService = cache.getQueryService();
+        var query = queryService.newQuery("SELECT * FROM /customer");
+        SelectResults<Customer> customers = null;
+        try {
+            customers = (SelectResults) query.execute();
+        } catch (Exception e) {
+            logger.error("Error", e);
+        }
         return customers;
     }
 }

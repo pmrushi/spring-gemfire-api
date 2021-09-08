@@ -1,6 +1,6 @@
-package com.example.GemifireRestAPISample.web;
+package com.example.genfire.web;
 
-import com.example.GemifireRestAPISample.model.Customer;
+import com.example.genfire.model.Customer;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.geode.cache.GemFireCache;
 import org.apache.geode.cache.query.Query;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MyControllerTest {
+class MyControllerTest {
 
     @Mock
     private GemFireCache cache;
@@ -35,20 +35,20 @@ public class MyControllerTest {
     private MyController myController = new MyController(new SimpleMeterRegistry());
 
     @Test
-    public void getSample() {
+    void getSample() {
         String sample = myController.getSample();
         assertTrue(sample.startsWith("hello-"));
     }
 
     @Test
-    public void getMessage() {
+    void getMessage() {
         Customer customer = myController.getMessage("id");
         assertEquals("Welcome to Gemfire", customer.getMessage());
         assertEquals("id", customer.getId());
     }
 
     @Test
-    public void list() throws Exception {
+    void list() throws Exception {
         ExtendedModelMap extendedModelMap = new ExtendedModelMap();
         when(cache.getQueryService()).thenReturn(queryService);
         when(queryService.newQuery("SELECT * FROM /customer")).thenReturn(query);
@@ -60,13 +60,13 @@ public class MyControllerTest {
     }
 
     @Test
-    public void getAll() throws Exception {
+    void getAll() throws Exception {
         ExtendedModelMap model = new ExtendedModelMap();
         when(cache.getQueryService()).thenReturn(queryService);
         when(queryService.newQuery("SELECT * FROM /customer")).thenReturn(query);
         LinkedResultSet linkedResultSet = new LinkedResultSet();
         when(query.execute()).thenReturn(linkedResultSet);
-        SelectResults<Customer> customers = myController.getAll(model);
+        SelectResults<Customer> customers = myController.getAll();
         assertEquals(0, customers.size());
     }
 }

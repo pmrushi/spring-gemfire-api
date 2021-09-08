@@ -33,3 +33,12 @@ Return all customerObjs in json
 GET - http://localhost:8080/list
 
 Shows all customerObj in table.
+
+```
+
+./gradlew sonarqube \
+  -Dsonar.projectKey=spring-gemfire-api \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=1f1597c5404fff725bc28ecf2510a7bd19233a40
+  
+```

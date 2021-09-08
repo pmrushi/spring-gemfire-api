@@ -1,6 +1,6 @@
-package com.example.GemifireRestAPISample.repository;
+package com.example.genfire.repository;
 
-import com.example.GemifireRestAPISample.model.CustomerObj;
+import com.example.genfire.model.CustomerObj;
 import org.springframework.data.gemfire.repository.GemfireRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

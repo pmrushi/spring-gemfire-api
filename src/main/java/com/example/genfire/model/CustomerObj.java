@@ -1,4 +1,4 @@
-package com.example.GemifireRestAPISample.model;
+package com.example.genfire.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Region("customer")
 public class CustomerObj {
 
-    private static AtomicLong COUNTER = new AtomicLong(0L);
+    private static AtomicLong counter = new AtomicLong(0L);
 
     @Id
     private Long id;
@@ -19,7 +19,7 @@ public class CustomerObj {
 
     @PersistenceConstructor
     public CustomerObj() {
-        this.id = COUNTER.incrementAndGet();
+        this.id = counter.incrementAndGet();
     }
 
     public String getFirstname() {

@@ -1,4 +1,4 @@
-package com.example.GemifireRestAPISample.model;
+package com.example.genfire.model;
 
 import java.util.Date;
 

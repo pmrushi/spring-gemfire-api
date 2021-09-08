@@ -1,4 +1,4 @@
-package com.example.GemifireRestAPISample.model;
+package com.example.genfire.model;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CustomerTest {
 
-    private Customer customer = new Customer();
+    private Customer customer = new Customer(new Date(), "test", "id");
 
     @Test
     void getDate() {
