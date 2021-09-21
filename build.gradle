@@ -2,7 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.4.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id "org.sonarqube" version "3.0"
+	id 'jacoco'
+	id "org.sonarqube" version "3.3"
 }
 
 group = 'com.example'
@@ -21,6 +22,25 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+jacocoTestReport {
+	reports {
+		xml.enabled true
+	}
+}
+test.finalizedBy jacocoTestReport
+
 test {
 	useJUnitPlatform()
+}
+
+sonarqube {
+	properties {
+		property 'sonar.host.url', 'http://localhost:9000'
+		property 'sonar.projectKey', 'spring-gemfire-api'
+		property 'sonar.login', '1f1597c5404fff725bc28ecf2510a7bd19233a40'
+	}
+}
+
+tasks.named('sonarqube').configure {
+	dependsOn test
 }
